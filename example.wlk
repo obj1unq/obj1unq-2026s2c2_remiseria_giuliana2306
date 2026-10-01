@@ -179,3 +179,56 @@ object interiorAccesible {
         return true
      }
 }
+
+class Reserva {
+    var property cantDePersonas = 0
+    var property distanciaARecorrer = 0
+    var property tiempoMaximoDeViaje = 0
+    var property tieneSillaDeRuedas = false
+    var property necesitaSilencio = false 
+    var coloresContraindicados = #{}
+
+    method puedeSerCumplidaPor(_vehiculo) {
+        return self.tieneCapacidadIgualOSuperior(_vehiculo)  && 
+               self.tieneAutonomiaIgualOSuperior(_vehiculo)  &&
+               self.velocidadSuperaALaDelPromedio(_vehiculo) &&
+               self.cumpleNecesidadesDePasajeros(_vehiculo)
+    }
+    method añadirColorContraindicado(_color) {
+        coloresContraindicados.add(_color)
+    }
+    method tieneCapacidadIgualOSuperior(_vehiculo) {
+       return _vehiculo.capacidad() >= cantDePersonas
+    }    
+    method tieneAutonomiaIgualOSuperior(_vehiculo) {
+        return _vehiculo.autonomia() >= distanciaARecorrer
+    }
+    method velocidadSuperaALaDelPromedio(_vehiculo) {
+        return _vehiculo.velocidadMax() >= (self.velocidadPromedio() + 10)
+    }
+    method velocidadPromedio() {
+        return distanciaARecorrer / tiempoMaximoDeViaje
+    }
+    method cumpleNecesidadesDePasajeros(_vehiculo) {
+        return ( not self.tieneColores(_vehiculo, coloresContraindicados)) && 
+                 self.necesitaSillaDeRuedas(_vehiculo)               &&
+                 self. necesitaQueNoSeaRuidoso(_vehiculo)
+    }
+    method necesitaSillaDeRuedas(_vehiculo) {
+        if (tieneSillaDeRuedas) {
+            return _vehiculo.puedeTransportarSilla()
+        } else {
+            return true
+        }
+    }
+    method necesitaQueNoSeaRuidoso(_vehiculo) {
+        if (necesitaSilencio) {
+            return not _vehiculo.esRuidoso()
+    } else {
+        return true
+    }
+    }
+    method tieneColores(_vehiculo, _coloresContraindicados) {
+       return _coloresContraindicados.contains(_vehiculo.color())   
+    }
+}

@@ -88,5 +88,94 @@ describe "remiseria crediCoop" {
     assert.equals(false, combiAdaptable.puedeTransportarSilla())
     assert.equals(true, combiAdaptable.esRuidoso())
   }
+  test "Reserva exigente cumplida sin inconvenientes" {
+    const reserva1 = new Reserva()
+
+    combiAdaptable.asignarInterior(interiorAccesible)
+    combiAdaptable.asignarMotor(urbano)
+
+    reserva1.cantDePersonas(5)
+    reserva1.distanciaARecorrer(480)
+    reserva1.tiempoMaximoDeViaje(4)
+    reserva1.necesitaQueNoSeaRuidoso(true)
+    reserva1.tieneSillaDeRuedas(true)
+    reserva1.añadirColorContraindicado("rojo")
+    reserva1.añadirColorContraindicado("verde flúor")
+
+    assert.equals(true, reserva1.puedeSerCumplidaPor(combiAdaptable))
+  }
+  test "Reserva que falla por capacidad insuficiente" {
+    const reyDeCopas = new Torino() 
+    const reserva1 = new Reserva()
+
+    reyDeCopas.color("Rojo")
+    reyDeCopas.autonomia(300)
+    reyDeCopas.velocidadMax(120)
+
+    reserva1.cantDePersonas(5)
+    reserva1.distanciaARecorrer(200)
+    reserva1.tiempoMaximoDeViaje(2)
+
+    assert.equals(false, reserva1.puedeSerCumplidaPor(reyDeCopas))
+  }
+  test "Reserva que falla por autonomía insuficiente" {
+    const xeneize = new Economico()
+    const reserva1 = new Reserva()
+
+    xeneize.añadirAdaptacion(cañoDeEscapeSilencioso)
+
+    reserva1.cantDePersonas(5)
+    reserva1.distanciaARecorrer(195)
+    reserva1.tiempoMaximoDeViaje(2)
+
+    assert.equals(false, reserva1.puedeSerCumplidaPor(xeneize))
+  }
+  test "Reserva que falla por velocidad insuficiente" {
+    const millonario = new Economico()
+    const reserva1 = new Reserva()
+
+    reserva1.cantDePersonas(5)
+    reserva1.distanciaARecorrer(200)
+    reserva1.tiempoMaximoDeViaje(1)
+
+    assert.equals(false, reserva1.puedeSerCumplidaPor(millonario))
+  }
+  test "Reserva que falla por color contraindicado" {
+    const reyDeCopas = new Torino() 
+    const reserva1 = new Reserva()
+
+    reyDeCopas.color("Rojo")
+    reyDeCopas.autonomia(300)
+    reyDeCopas.velocidadMax(120)
+
+    reserva1.cantDePersonas(4)
+    reserva1.distanciaARecorrer(150)
+    reserva1.tiempoMaximoDeViaje(1.5)
+    reserva1.añadirColorContraindicado("Rojo") 
+
+    assert.equals(false, reserva1.puedeSerCumplidaPor(reyDeCopas))
+  }
+  test "Reserva que falla por necesitar transportar silla de ruedas" {
+    const millonario = new Economico()
+    const reserva1 = new Reserva()
+
+    reserva1.cantDePersonas(5)
+    reserva1.distanciaARecorrer(150)
+    reserva1.tiempoMaximoDeViaje(1.5)
+    reserva1.tieneSillaDeRuedas(true)
+
+    assert.equals(false, reserva1.puedeSerCumplidaPor(millonario))
+  }
+  test "Reserva que falla por necesitar un vehículo silencioso" {
+    const millonario = new Economico()
+    const reserva1 = new Reserva()
+
+    reserva1.cantDePersonas(5)
+    reserva1.distanciaARecorrer(150)
+    reserva1.tiempoMaximoDeViaje(1.5)
+    reserva1.necesitaSilencio(true)
+
+    assert.equals(false, reserva1.puedeSerCumplidaPor(millonario))
+  }
 }
 
