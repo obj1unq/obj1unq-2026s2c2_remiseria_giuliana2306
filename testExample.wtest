@@ -177,5 +177,144 @@ describe "remiseria crediCoop" {
 
     assert.equals(false, reserva1.puedeSerCumplidaPor(millonario))
   }
+  test "sucursal villaElisa" {
+    const sucursalV  = new Sucursal()
+    const reserva1   = new Reserva()
+    const academia   = new Torino() 
+    const reyDeCopas = new Torino() 
+
+    combiAdaptable.asignarInterior(interiorAccesible)
+    combiAdaptable.asignarMotor(urbano)
+
+    reyDeCopas.color("Rojo")
+    reyDeCopas.autonomia(300)
+    reyDeCopas.velocidadMax(120)
+
+    sucursalV.agregarVehiculo(combiAdaptable)
+    sucursalV.agregarVehiculo(academia)
+    sucursalV.agregarVehiculo(reyDeCopas)
+
+    reserva1.cantDePersonas(4)
+    reserva1.distanciaARecorrer(30)
+    reserva1.tiempoMaximoDeViaje(4)
+    reserva1.añadirColorContraindicado("Rojo") 
+
+    assert.equals({combiAdaptable, academia}, sucursalV.vehiculosQueCumplen(reserva1))
+  }
+  test "reserva de sucursal villaElisa con reyDeCopas" {
+    const sucursalV  = new Sucursal()
+    const reserva1   = new Reserva()
+    const academia   = new Torino() 
+    const reyDeCopas = new Torino() 
+
+    combiAdaptable.asignarInterior(interiorAccesible)
+    combiAdaptable.asignarMotor(urbano)
+
+    reyDeCopas.color("Rojo")
+    reyDeCopas.autonomia(300)
+    reyDeCopas.velocidadMax(120)
+
+    sucursalV.agregarVehiculo(combiAdaptable)
+    sucursalV.agregarVehiculo(academia)
+    sucursalV.agregarVehiculo(reyDeCopas)
+
+    reserva1.cantDePersonas(4)
+    reserva1.distanciaARecorrer(30)
+    reserva1.tiempoMaximoDeViaje(4)
+    reserva1.añadirColorContraindicado("Rojo") 
+
+    assert.throwsException({ sucursalV.registrarViaje(reserva1, reyDeCopas ) })
+    }
+    test "registrar reserva con xeneize" {
+    const sucursalV  = new Sucursal()
+    const reserva1   = new Reserva()
+    const academia   = new Torino() 
+    const reyDeCopas = new Torino() 
+
+    combiAdaptable.asignarInterior(interiorAccesible)
+    combiAdaptable.asignarMotor(urbano)
+
+    reyDeCopas.color("Rojo")
+    reyDeCopas.autonomia(300)
+    reyDeCopas.velocidadMax(120)
+
+    sucursalV.agregarVehiculo(combiAdaptable)
+    sucursalV.agregarVehiculo(academia)
+    sucursalV.agregarVehiculo(reyDeCopas)
+
+    reserva1.cantDePersonas(4)
+    reserva1.distanciaARecorrer(30)
+    reserva1.tiempoMaximoDeViaje(4)
+    reserva1.añadirColorContraindicado("Rojo") 
+
+    assert.throwsException({ sucursalV.registrarViaje(reserva1, xeneize ) })
+    }
+    test "registrar reserva con combi" {
+    const sucursalV  = new Sucursal()
+    const reserva1   = new Reserva()
+  
+    combiAdaptable.asignarInterior(interiorAccesible)
+    combiAdaptable.asignarMotor(urbano)
+
+    sucursalV.agregarVehiculo(combiAdaptable)
+
+    reserva1.cantDePersonas(4)
+    reserva1.distanciaARecorrer(30)
+    reserva1.tiempoMaximoDeViaje(4)
+    reserva1.añadirColorContraindicado("Rojo") 
+
+    sucursalV.registrarViaje(reserva1, combiAdaptable )
+    
+    assert.equals( [reserva1], sucursalV.reservasQueResolvio(combiAdaptable))
+    }
+    test "registrar viajes a universidades"{
+      const sucursalV  = new Sucursal()
+      const reserva1   = new Reserva()
+      const reserva2   = new Reserva()
+      const reserva3   = new Reserva()
+      const academia   = new Torino() 
+      const reyDeCopas = new Torino() 
+
+      combiAdaptable.asignarInterior(interiorAccesible)
+      combiAdaptable.asignarMotor(urbano)
+
+      reyDeCopas.color("Rojo")
+      reyDeCopas.autonomia(300)
+      reyDeCopas.velocidadMax(120)
+
+      academia.color("Celeste")
+      academia.autonomia(250)
+      academia.velocidadMax(110)
+
+      sucursalV.agregarVehiculo(combiAdaptable)
+      sucursalV.agregarVehiculo(academia)
+      sucursalV.agregarVehiculo(reyDeCopas)
+
+      reserva1.cantDePersonas(4)
+      reserva1.distanciaARecorrer(30)
+      reserva1.tiempoMaximoDeViaje(4)
+      reserva1.añadirColorContraindicado("Rojo") 
+
+      reserva2.cantDePersonas(4)
+      reserva2.distanciaARecorrer(60)
+      reserva2.tiempoMaximoDeViaje(4)
+      reserva2.necesitaSilencio(true)
+      reserva2.tieneSillaDeRuedas(true)
+
+      reserva3.cantDePersonas(4)
+      reserva3.distanciaARecorrer(70)
+      reserva3.tiempoMaximoDeViaje(4)
+      reserva3.añadirColorContraindicado("Rojo") 
+
+      sucursalV.registrarViaje(reserva1, combiAdaptable )
+      sucursalV.registrarViaje(reserva2, combiAdaptable)
+      sucursalV.registrarViaje(reserva3, academia)
+
+      assert.equals([reserva1, reserva2], sucursalV.reservasQueResolvio(combiAdaptable))
+      assert.equals(90,sucursalV.distanciaTotalRecorridaEnLosViajes(combiAdaptable))
+
+      assert.equals([reserva3], sucursalV.reservasQueResolvio(academia))
+      assert.equals(70,sucursalV.distanciaTotalRecorridaEnLosViajes(academia))
+    }
 }
 

@@ -1,0 +1,19 @@
+4. Para reflexionar:
+¿Da igual que las colecciones de flotas y viajes en la sucursal sean listas o conjuntos? Si piensas que no,
+ cambia una implementación por la otra y revisa el resultado.
+
+ No da igual, ya que las colecciones de flotas es un conjunto porque no puede aparecer dos veces, si se agregara
+ dosveces seria el mismo vehiculo.
+
+ Los viajes en la sucursal, es una lista ya que se pueden realizar viajes con el mismo vehiculo.
+
+¿Dónde se instancia un viaje, dentro o fuera de la clase Sucursal?. Pensar como sería la alternativa.
+
+El viaje se instancia dentro de la clase Sucursal ya que esta es la que regista el viaje, por lo tanto decide
+cuando crear el viaje.
+
+La alternativa sería instanciarlo afuera y pasárselo a la sucursal como parámetro.
+
+¿La combi es un objeto autodefinido o una instancia de clase? ¿Se puede usar la otra variante indistintamente?
+
+Es un objeto autodefinido. No, ya que la combi es una en especifica.

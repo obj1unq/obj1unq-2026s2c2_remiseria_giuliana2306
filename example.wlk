@@ -75,7 +75,7 @@ class Economico {
     }
 
     method tieneAdaptaciones () {
-        return adaptaciones.contains(cañoDeEscapeSilencioso) && 
+        return adaptaciones.contains(cañoDeEscapeSilencioso) || 
         adaptaciones.contains(tanqueExtraDeGas)
     }
     method puedeTransportarSilla() {
@@ -231,4 +231,48 @@ class Reserva {
     method tieneColores(_vehiculo, _coloresContraindicados) {
        return _coloresContraindicados.contains(_vehiculo.color())   
     }
+}
+
+class Sucursal {
+    var flotaDeVehiculos = #{}
+    var historialDeViajesRealizados = []
+
+    method agregarVehiculo(_vehiculo) {
+        flotaDeVehiculos.add(_vehiculo)
+    }
+    method quitarVehiculo(_vehiculo) {
+        flotaDeVehiculos.remove(_vehiculo)
+    }
+    method vehiculosQueCumplen(_reserva) {
+        return flotaDeVehiculos.filter({vehiculo => _reserva.puedeSerCumplidaPor(vehiculo)})
+    }
+    method registrarViaje(_reserva, _vehiculo) {
+        const viaje1 = new Viaje()
+        viaje1.reserva(_reserva)
+        viaje1.vehiculo(_vehiculo)
+        self.validarRegistrarViaje(_reserva, _vehiculo)
+        historialDeViajesRealizados.add(viaje1)
+    }
+    method validarRegistrarViaje(_reserva, _vehiculo) {
+        if (not self.vehiculosQueCumplen(_reserva).contains(_vehiculo)) {
+            self.error("No se puede registrar viaje")
+        }
+    }
+    method reservasQueResolvio(_vehiculo) {
+        return self.viajesDelVehiculo(_vehiculo).map({viaje => viaje.reserva()})
+    }
+    method viajesDelVehiculo(_vehiculo) {
+        return historialDeViajesRealizados.filter({viaje => viaje.vehiculo() == _vehiculo})
+    }
+    method distanciaTotalRecorridaEnLosViajes(_vehiculo) {
+        return self.reservasQueResolvio(_vehiculo).sum({reserva => reserva.distanciaARecorrer()})
+    }
+    method historialDeViajesRealizados() {
+        return historialDeViajesRealizados
+    }
+}
+
+class Viaje {
+    var property reserva = null
+    var property vehiculo = null  
 }
